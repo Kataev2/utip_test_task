@@ -1,0 +1,248 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+
+body {
+  min-height: 100vh;
+  background: #e7eef8;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400;
+  font-size: 15px;
+}
+
+button {
+  background: transparent;
+  cursor: pointer;
+  outline: 0;
+  border: none;
+}
+
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.main {
+  padding: 100px 0;
+}
+
+.table__title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.table__title h1 {
+  font-size: 25px;
+  color: #232a3a;
+}
+
+.table__btn_upload {
+  border: 1px solid #5b7af7;
+  color: #5b7af7;
+  padding: 10px 25px;
+  border-radius: 5px;
+  background: transparent;
+  transition: all .2s;
+}
+
+.table__btn_upload:hover {
+  background: #5b7af7;
+  color: #fff;
+}
+
+.table__btn_clean {
+  border: 1px solid #ec4e32;
+  color: #ec4e32;
+  padding: 10px 25px;
+  border-radius: 5px;
+  background: transparent;
+  transition: all .2s;
+  margin: 0 10px 0 0;
+}
+
+.table__btn_clean:hover {
+  background: #ec4e32;
+  color: #fff;
+}
+
+.table__container {
+  overflow: hidden;
+  position: relative;
+  padding: 20px 30px;
+  background: #fff;
+  border-radius: 10px
+}
+
+.table__wrapper {
+  position: relative;
+  min-height: 20px;
+  max-height: 100px;
+  transition: all .2s;
+  overflow-y: auto;
+}
+
+.table__wrapper.js-upload {
+  max-height: 400px;
+}
+
+.table__wrapper.js-upload .table__nodata{
+  opacity: 0;
+  position: absolute;
+  visibility: hidden;
+}
+
+.table__wrapper::-webkit-scrollbar {
+  width: 10px;    
+}
+
+.table__wrapper::-webkit-scrollbar-track {
+  background: #f7f7f8;  
+  border-radius: 20px;  
+}
+
+.table__wrapper::-webkit-scrollbar-thumb {
+  background-color: #d4d4d4; 
+  border-radius: 20px;       
+  border: 3px solid #f7f7f8;  
+}
+
+.table__nodata {
+  width: 100%;
+  position: absolute;
+  text-align: center;
+  font-weight: 600;
+  color: #232a3a;
+}
+
+.table__row, .table__header {
+  display: grid;
+  grid-template-columns: minmax(100px, 2fr) repeat(4, 1fr);
+  column-gap: 20px;
+  padding: 10px 20px;
+  border-radius: 8px; 
+}
+
+.table__header {
+  width: 100%;
+  margin-bottom: 20px;
+  color: #6c6c84;
+  font-weight: 600;
+  background-color: #f7f7f8;
+}
+
+.table__header.offset {
+  padding-right: 30px;
+}
+
+.table__header-item {
+  position: relative;
+}
+
+.table__header-item img{
+  opacity: 0;
+  width: 12px;
+  height: 12px;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  transition: transform .2s;
+}
+
+.table__header-item.js-asc img{
+  opacity: 1;
+}
+
+.table__header-item.js-desc img{
+  opacity: 1;
+  transform: translateY(-50%) scale(1, -1);
+}
+
+
+.table__row {
+  position: relative;
+  transition: background-color .2s;
+}
+
+.table__row:hover {
+  background-color: #f7f7f8;
+}
+
+.table__row.js-remove {
+  animation: remove .2s ease-in forwards;
+}
+
+@keyframes remove {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+.table__btn_delete {
+  opacity: 0;
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+  transition: all .2s;
+}
+
+.table__btn_delete img {
+  width: 12px;
+  height: 12px;
+}
+
+.table__row:hover .table__btn_delete {
+  opacity: 1;
+}
+
+.table__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: #fff;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 25px;
+  font-weight: 600;
+  opacity: 0;
+  visibility: hidden;
+  transition: all .3s;
+}
+
+.table__overlay.js-active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.preloader {
+  width: 50px;
+  height: 50px;
+  border: 2px dashed #000;
+  border-radius: 50%;
+  animation: around 3s linear infinite;
+}
+
+@keyframes around {
+  0% {
+    transform: rotate(0);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}

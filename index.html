@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <title>Utip</title>
+</head>
+<body>
+  <section class="main">
+    <div class="container">
+      
+      <div class="table">
+        <div class="table__title">
+          <h1>Table</h1>
+          
+          <div class="table__title-container">
+            <button class="table__btn_clean">
+              Clean Data
+            </button>
+
+            <button class="table__btn_upload">
+              Upload data
+            </button>
+          </div>
+        </div>
+  
+        <div class="table__container">
+          <div class="table__header">
+            <div class="table__header-item" data-sort="name">
+              <span>Name</span>
+              <img src="/img/down-arrow.png" alt="">
+            </div> 
+
+            <div class="table__header-item" data-sort="height">
+              <span>Height</span>
+              <img src="/img/down-arrow.png" alt="">
+            </div>
+
+            <div class="table__header-item" data-sort="mass">
+              <span>Mass</span>
+              <img src="/img/down-arrow.png" alt="">
+            </div>
+
+            <div class="table__header-item" data-sort="hair_color">
+              <span>Hair color</span>
+              <img src="/img/down-arrow.png" alt="">
+            </div>
+
+            <div class="table__header-item" data-sort="skin_color">
+              <span>Skin color</span>
+              <img src="/img/down-arrow.png" alt="">
+            </div>
+          </div>
+
+          <div class="table__wrapper">
+            <div class="table__nodata">No data</div>
+          </div>
+
+          <div class="table__overlay">
+            <div class="preloader"></div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </section>
+
+  <script src="/app.js"></script>
+</body>
+</html>
