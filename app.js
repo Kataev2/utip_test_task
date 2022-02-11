@@ -2,9 +2,7 @@
 
 window.onload = () => {
   checkDataSave(TABLE_TEAMPLATE_CLASSES.wrapper, TABLE_TEAMPLATE_CLASSES.header);
-
   uploadDataHandler(TABLE_TEAMPLATE_CLASSES.btnUpload, TABLE_TEAMPLATE_CLASSES.wrapper, TABLE_TEAMPLATE_CLASSES.overlay, TABLE_TEAMPLATE_CLASSES.header);
-
   clearDataHandler(TABLE_TEAMPLATE_CLASSES.btnCLean, TABLE_TEAMPLATE_CLASSES.wrapper, TABLE_TEAMPLATE_CLASSES.row, TABLE_TEAMPLATE_CLASSES.header);
 }
 
@@ -20,17 +18,16 @@ const TABLE_TEAMPLATE_CLASSES = {
 };
 
 const keyList = ['name', 'height', 'mass', 'hair_color', 'skin_color'];
-
+let rows = [];
 let data = [];
-
 
 
 // ---- Data ----
 
 async function getData(url) {
-  const responce = await fetch(url);
+  const response = await fetch(url);
 
-  return await responce.json();
+  return await response.json();
 }
 
 function uploadDataHandler(btn, wrapper, over, header) {
@@ -41,25 +38,28 @@ function uploadDataHandler(btn, wrapper, over, header) {
     overlay.classList.add('js-active');
 
     getData('https://swapi.dev/api/people')
-      .then((responce) => {
-        data = [...data, ...responce.results]; 
+      .then((response) => {
+        const result = response.results.map((item, index) => {
+          item.id = index;
+
+          return item;
+        });
+
+        data = [...data, ...result]; 
         
         if (data.length > 0) {
           setDataLocalStorage('data', 'people');
-
           buildTable(data, wrapper, header, TABLE_TEAMPLATE_CLASSES.row);
-
-          deleteRow(TABLE_TEAMPLATE_CLASSES.row, TABLE_TEAMPLATE_CLASSES.btnDelete);
-
           sortTable(TABLE_TEAMPLATE_CLASSES.column);
 
           setTimeout(() => {
             overlay.classList.remove('js-active');
           }, 600);
-        };
+        }
       });
   });
 };
+
 
 function clearDataHandler(btn, wrapper, row, header) {
   const tableWrapper = document.querySelector(wrapper);
@@ -72,28 +72,20 @@ function clearDataHandler(btn, wrapper, row, header) {
     data = [];
 
     localStorage.removeItem('data');
-
     tableWrapper.classList.remove('js-upload');
-
     tableHeader.classList.remove('offset');
 
-    removeRows(rowsTable, 300);
+    removeRows(rowsTable);
   })
 }
-
-
 
 // ---- LocalStorage ----
 
 function checkDataSave(wrapper, header) { 
   if(localStorage.getItem('data')) {
     getDataLocalStorage('data', 'people');
-
     buildTable(data, wrapper, header, TABLE_TEAMPLATE_CLASSES.row);
-
     sortTable(TABLE_TEAMPLATE_CLASSES.column);
-
-    deleteRow(TABLE_TEAMPLATE_CLASSES.row, TABLE_TEAMPLATE_CLASSES.btnDelete);
   } 
 }
 
@@ -105,8 +97,6 @@ function setDataLocalStorage(key, param) {
   localStorage.setItem(key, JSON.stringify({[param]: data}));
 };
 
-
-
 // ---- Table ----
 
 function buildTable(data, wrapper, header, row)  {
@@ -117,7 +107,7 @@ function buildTable(data, wrapper, header, row)  {
   const templateButton = 
     `
     <button class="table__btn_delete">
-      <img src="/img/close.png" alt="">
+      <img src="img/close.png" alt="">
     </button>
     `;
   
@@ -127,14 +117,13 @@ function buildTable(data, wrapper, header, row)  {
     tableHeader.classList.add('offset');
   };
 
-
-  removeRows(rowsTable, 0);
-
+  removeRows(rowsTable);
 
   data.forEach(people => {
     const template = document.createElement('div');
 
     template.classList = 'table__row';
+    template.setAttribute('data-id', people.id);
 
     for (let peopleKey in people) {
       const filteredKeyList = keyList.filter(key => key === peopleKey);
@@ -150,36 +139,46 @@ function buildTable(data, wrapper, header, row)  {
 
     tableWrapper.append(template);
   });
+
+  rowHandler(TABLE_TEAMPLATE_CLASSES.row, TABLE_TEAMPLATE_CLASSES.btnDelete);
 }
 
-function removeRows(rowArray, timeout) {
+function removeRows(rowArray) {
   rowArray.forEach(row => {
     row.classList.add('js-remove');
    
-    setTimeout(() => {
-      row.remove();
-    }, timeout);
+    row.remove();
   });
 };
 
-function deleteRow(rows, del) {
-  const rowArray = document.querySelectorAll(rows);
+function rowHandler(row, del) {
+  const rowArray = document.querySelectorAll(row);
 
-  rowArray.forEach((row, index) => {
+  rowArray.forEach(row => {
     const deleteButton = row.querySelector(del);
+    const rowId = row.getAttribute('data-id')
 
     deleteButton.addEventListener('click', () => {
-      row.classList.add('js-remove');
-
-      setTimeout(() => {
-        row.remove();
-      }, 400);
-
-      data.splice(index, 1);
-
-      setDataLocalStorage('data', 'people');
+      deleteRow(row, rowId);
     });
   });
+}
+
+function deleteRow(row, id) {
+  row.classList.add('js-remove');
+
+  setTimeout(() => {
+    row.remove();
+  }, 400);
+ 
+
+  const index = data.map(people => {
+    return people.id
+  }).indexOf(+id);
+
+  data.splice(index, 1);
+
+  setDataLocalStorage('data', 'people');
 };
 
 function sortTable(btn) {
@@ -211,16 +210,12 @@ function sortTable(btn) {
           case a > b: return 1;
           case a < b: return -1;
           case a === b: return 0;
-        };
+        }
       });
 
-      if(!direction) {
-        data.reverse()
-      };
+      if (!direction) data.reverse();
 
       buildTable(data, TABLE_TEAMPLATE_CLASSES.wrapper, TABLE_TEAMPLATE_CLASSES.header, TABLE_TEAMPLATE_CLASSES.row);
-
-      deleteRow(TABLE_TEAMPLATE_CLASSES.row, TABLE_TEAMPLATE_CLASSES.btnDelete);
     });
   });
 };

@@ -143,6 +143,7 @@ button {
 
 .table__header-item {
   position: relative;
+  cursor: pointer;
 }
 
 .table__header-item img{
